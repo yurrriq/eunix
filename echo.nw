@@ -1,0 +1,103 @@
+% -*- ess-noweb-code-mode: c-mode; -*-
+\documentclass[nobib]{tufte-handout}
+
+
+\input{preamble.tex}
+
+
+% \usepackage[xindy,nopostdot]{glossaries}
+% \makeglossaries
+% \input{glossary}
+% \renewcommand*{\glstextformat}[1]{\textsl{#1}}
+
+
+\hypersetup{
+  pdffitwindow=true,
+  pdfstartview={FitH},
+  pdftitle={eunix: echo},
+  pdfauthor={Eric Bailey <eric@ericb.me>},
+  pdfsubject={A reimplementation of UNIX's echo for my own edification},
+  pdfkeywords={UNIX, C language, learning},
+  colorlinks=true,
+  linkcolor=ErlangRed,
+  urlcolor=ErlangRed
+}
+
+
+\title{eunix: echo}
+
+
+\date{%
+  October 31, 2017
+  \thanks{Last updated \today}
+}
+
+
+\begin{document}
+
+
+\maketitle
+@
+
+
+\begin{abstract}
+  A reimplementation of UNIX's {\tt echo} for my own edification.
+\end{abstract}
+
+
+Include the core input and output functions from the C standard library.
+<<*>>=
+#include <stdio.h>
+
+
+@
+
+
+Declare the [[usage]] function.
+<<*>>=
+void usage();
+
+
+@
+
+
+The [[main]] function.
+<<*>>=
+int main(int argc, char **argv)
+{
+  usage();
+  return 0;
+}
+
+
+@ \todor{Fix this, obviously...}
+
+
+<<*>>=
+void usage()
+{
+  printf("\n"
+         "       echo -- display a line of text"
+         "\n");
+}
+@ \todoo{Flesh this out.}
+
+
+\newpage
+\chapter{Chunks}
+\nowebchunks
+
+
+\chapter{Index}
+\nowebindex
+
+
+% \bibliography{echo}
+% \bibliographystyle{plainnat}
+
+
+\newpage
+\listoftodos[To-Do]
+
+
+\end{document}
