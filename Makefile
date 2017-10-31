@@ -1,9 +1,8 @@
-CC   ?= cc
-cpif ?= | cpif
-
-
-tools := \
-	echo
+CFLAGS ?= -Wall -std=c99
+cpif   ?= | cpif
+SRC    := $(wildcard *.nw)
+BIN    := ${SRC:.nw=.c}
+PDF    := ${SRC:.nw=.pdf}
 
 
 .SUFFIXES: .nw .c .pdf .tex
@@ -20,8 +19,4 @@ tools := \
 
 
 .PHONY: all
-all: ${tools} ${tools:=.pdf}
-
-
-%: %.c
-	${CC} -o $@ $<
+all: ${BIN} ${PDF}
