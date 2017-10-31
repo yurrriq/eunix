@@ -16,7 +16,7 @@
   pdfstartview={FitH},
   pdftitle={eunix: echo},
   pdfauthor={Eric Bailey <eric@ericb.me>},
-  pdfsubject={A reimplementation of UNIX's echo for my own edification},
+  pdfsubject={A reimplementation of echo for my own edification},
   pdfkeywords={UNIX, C language, learning},
   colorlinks=true,
   linkcolor=ErlangRed,
@@ -41,13 +41,21 @@
 
 
 \begin{abstract}
-  A reimplementation of UNIX's {\tt echo} for my own edification.
+  A reimplementation of \cee{echo} for my own edification.
 \end{abstract}
 
+
+\section{Headers and Forward Declarations}
 
 Include the core input and output functions from the C standard library.
 <<*>>=
 #include <stdio.h>
+@
+
+
+\todoo{Describe GNU \cee{getopt}}
+<<*>>=
+#include <getopt.h>
 
 
 @
@@ -61,35 +69,131 @@ void usage();
 @
 
 
-The [[main]] function.
+\section{The \cee{main} Function}
+
 <<*>>=
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-  usage();
-  return 0;
+    <<Process given options.>>
+
+    <<Print each string, separated by a space.>>
+
+    <<Print a newline unless the [[-n]] option was given.>>
+
+    return 0;
 }
 
 
-@ \todor{Fix this, obviously...}
+@
 
 
+\section{Processing Options}
+
+Currently, the [[<<legal options>>]] are:
+\begin{itemize}
+  \item \cee{-n} (do not print a trailing newline)
+\end{itemize}
+
+<<legal options>>=
+n
+@
+
+
+\subsection{\cee{-n} (do not print a trailing newline)}
+
+Declare a variable [[newline]] to determine whether or not to print a newline
+after printing the rest of the given strings, i.e.
+<<Print a newline unless the [[-n]] option was given.>>=
+if (newline)
+    putchar('\n');
+@
+
+When the \cee{-n} option is given, set \cee{newline} to \cee{0},
+thereby disabling the printing of the trailing newline.
+<<Handle [[-n]].>>=
+case 'n':
+    newline = 0;
+    break;
+@
+
+By default, print a trailing newline.
+<<Process given options.>>=
+int newline = 1;
+
+@
+
+
+\subsection{Looping Through Given Options}
+
+<<Process given options.>>=
+int c;
+
+while (<<Process each option until [[EOF]].>>) {
+    switch (c) {
+    <<Handle [[-n]].>>
+    <<Handle illegal options.>>
+    }
+}
+@
+
+
+\todoo{Describe this, esp. \cee{getopt}}
+<<Process each option until [[EOF]].>>=
+(c = getopt(argc, argv, "<<legal options>>")) != EOF
+@
+
+
+If the user gives an illegal option, i.e. one not included in the
+[[<<legal options>>]], display the [[usage]] information and
+return a non-zero status code.
+
+<<Handle illegal options.>>=
+case '?':
+    usage();
+    return 1;
+@
+
+
+\section{Echoing Strings}
+
+Otherwise, loop through the remainder of \cee{argv} and print each string,
+followed by a space. Unless the current string is the last one,
+i.e. \cee{index == argc - 1}, in which case, do {\bf not} print a space.
+<<Write a space unless this is the last string.>>=
+if (index < argc - 1)
+    putchar(' ');
+@
+
+
+\todoo{Describe \cee{optind}}
+<<Print each string, separated by a space.>>=
+int index;
+
+for (index = optind; index < argc; index++) {
+    printf("%s", argv[index]);
+    <<Write a space unless this is the last string.>>
+}
+@
+
+
+\section{The \cee{usage} Function}
+
+Display information on how to use [[echo]], including [[<<legal options>>]].
 <<*>>=
 void usage()
 {
-  printf("\n"
-         "       echo -- display a line of text"
-         "\n");
+    printf("Usage: echo [-n] [string ...]\n");
 }
-@ \todoo{Flesh this out.}
+@
 
 
-\newpage
-\chapter{Chunks}
-\nowebchunks
+% \newpage
+% \chapter{Chunks}
+% \nowebchunks
 
 
-\chapter{Index}
-\nowebindex
+% \chapter{Index}
+% \nowebindex
 
 
 % \bibliography{echo}
