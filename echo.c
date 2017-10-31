@@ -7,14 +7,15 @@ void usage();
 
 int main(int argc, char *argv[])
 {
-    int newline = 1;
+    /* Flag set by '-n'. */
+    int newline_flag = 1;
 
     int c;
 
     while ((c = getopt(argc, argv, "n")) != EOF) {
         switch (c) {
         case 'n':
-            newline = 0;
+            newline_flag = 0;
             break;
         case '?':
             usage();
@@ -30,7 +31,7 @@ int main(int argc, char *argv[])
             putchar(' ');
     }
 
-    if (newline)
+    if (newline_flag)
         putchar('\n');
 
     return 0;

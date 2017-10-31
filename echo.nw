@@ -60,7 +60,6 @@ Include the core input and output functions from the C standard library.
 
 @
 
-
 Declare the [[usage]] function.
 <<*>>=
 void usage();
@@ -101,24 +100,25 @@ n
 
 \subsection{\cee{-n} (do not print a trailing newline)}
 
-Declare a variable [[newline]] to determine whether or not to print a newline
-after printing the rest of the given strings, i.e.
+Declare a variable [[newline_flag]] to determine whether or not to print a
+newline after printing the rest of the given strings, i.e.
 <<Print a newline unless the [[-n]] option was given.>>=
-if (newline)
+if (newline_flag)
     putchar('\n');
 @
 
-When the \cee{-n} option is given, set \cee{newline} to \cee{0},
+When the \cee{-n} option is given, set \cee{newline_flag} to \cee{0},
 thereby disabling the printing of the trailing newline.
 <<Handle [[-n]].>>=
 case 'n':
-    newline = 0;
+    newline_flag = 0;
     break;
 @
 
 By default, print a trailing newline.
 <<Process given options.>>=
-int newline = 1;
+/* Flag set by '-n'. */
+int newline_flag = 1;
 
 @
 
