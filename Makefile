@@ -13,6 +13,8 @@ endif
 latexmk_flags += -cd -pdf
 
 
+.PHONY: all check clean
+
 .SUFFIXES: .nw .c .tex .pdf
 
 .nw.c:
@@ -23,11 +25,13 @@ latexmk_flags += -cd -pdf
 	latexmk ${latexmk_flags} $<
 
 
-.PHONY: all
 all: ${C_SRC} ${BIN} ${PDF}
 
 
-.PHONY: clean
+check:
+	@ bin/check
+
+
 clean:
 	$(foreach pdf,${PDF},latexmk ${latexmk_flags} -f -C ${pdf};)
 	rm -fR ${BIN} ${C_SRC}{~,} docs/_minted-*
