@@ -2,7 +2,7 @@
 \documentclass[nobib]{tufte-handout}
 
 
-\input{preamble.tex}
+\input{../src/preamble.tex}
 
 
 % \usepackage[xindy,nopostdot]{glossaries}

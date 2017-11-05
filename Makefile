@@ -1,22 +1,42 @@
 CFLAGS ?= -Wall -std=c99
 cpif   ?= | cpif
-SRC    := $(wildcard *.nw)
-BIN    := ${SRC:.nw=.c}
-PDF    := ${SRC:.nw=.pdf}
+NW_SRC := $(wildcard src/*.nw)
+C_SRC  := ${NW_SRC:.nw=.c}
+PDF    := $(patsubst src/%.nw,docs/%.pdf,${NW_SRC})
+BIN    := $(patsubst src/%.c,bin/%,${C_SRC})
 
 
-.SUFFIXES: .nw .c .pdf .tex
+ifneq (,$(findstring B,$(MAKEFLAGS)))
+latexmk_flags = -gg
+endif
+
+latexmk_flags += -cd -pdf
+
+
+.SUFFIXES: .nw .c .tex .pdf
 
 .nw.c:
 	notangle $< ${cpif} $@
 	indent -kr -nut $@
 
-.nw.tex:
-	noweave -autodefs c -n -delay -index $< ${cpif} $@
-
 .tex.pdf:
-	latexmk -gg -e '$$pdflatex = q/xelatex %O -shell-escape %S/;' -pdf $<
+	latexmk ${latexmk_flags} $<
 
 
 .PHONY: all
-all: ${BIN} ${PDF}
+all: ${C_SRC} ${BIN} ${PDF}
+
+
+.PHONY: clean
+clean:
+	$(foreach pdf,${PDF},latexmk ${latexmk_flags} -f -C ${pdf};)
+	rm -fR ${BIN} ${C_SRC}{~,} docs/_minted-*
+
+
+docs/%.tex: src/%.nw
+	noweave -autodefs c -n -delay -index $< ${cpif} $@
+
+
+bin/%: src/%.c
+	@ mkdir -p $(dir $@)
+	${CC} ${CFLAGS} -o $@ $<
