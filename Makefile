@@ -22,7 +22,10 @@ latexmk_flags += -cd -pdf
 	indent -kr -nut $@
 
 .tex.pdf:
+	ln -sf ../src/$(notdir $*).{bib,c} ../src/preamble.tex docs/
 	latexmk ${latexmk_flags} $<
+	rm $*.{bib,c} docs/preamble.tex
+
 
 
 all: ${C_SRC} ${BIN} ${PDF}

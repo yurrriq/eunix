@@ -16,3 +16,6 @@ check_echo ()
 
 check_echo a simple test
 check_echo -n dash n
+check_echo -x ignore unknown options
+check_echo -n -x known then unknown
+check_echo -x -n unknown then known

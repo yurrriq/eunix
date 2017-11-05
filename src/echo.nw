@@ -1,8 +1,8 @@
 % -*- ess-noweb-code-mode: c-mode; -*-
-\documentclass[nobib]{tufte-handout}
+\documentclass{tufte-handout}
 
 
-\input{../src/preamble.tex}
+\input{preamble.tex}
 
 
 % \usepackage[xindy,nopostdot]{glossaries}
@@ -40,37 +40,33 @@
 @
 
 
+\begin{marginfigure}
+<<*>>=
+<<Include headers.>>
+
+
+<<Forward declarations.>>
+
+
+<<Define the [[main]] function.>>
+
+
+<<Define the [[usage]] function.>>
+@
+\end{marginfigure}
+
+
 \begin{abstract}
   A reimplementation of \cee{echo} for my own edification.
 \end{abstract}
 
 
-\section{Headers and Forward Declarations}
-
-Include the core input and output functions from the C standard library.
-<<*>>=
-#include <stdio.h>
-@
-
-
-\todoo{Describe GNU \cee{getopt}}
-<<*>>=
-#include <getopt.h>
-
-
-@
-
-Declare the [[usage]] function.
-<<*>>=
-void usage();
-
-
-@
+\tableofcontents
 
 
 \section{The \cee{main} Function}
 
-<<*>>=
+<<Define the [[main]] function.>>=
 int main(int argc, char *argv[])
 {
     <<Process given options.>>
@@ -81,105 +77,53 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+@ %def argc
+@ %def argv
 
 
-@
+\newpage
+\section{Include Headers}
+
+Include the core input and output functions from the C standard library.
+
+<<Include headers.>>=
+#include <stdio.h>
+@ %def EOF
+@ %def printf
+@ %def putchar
 
 
-\section{Processing Options}
+Include the GNU [[getopt]] function from the GNU C Library.
 
-Currently, the [[<<legal options>>]] are:
-\begin{itemize}
-  \item \cee{-n} (do not print a trailing newline)
-\end{itemize}
-
-<<legal options>>=
-n
-@
-
-
-\subsection{\cee{-n} (do not print a trailing newline)}
-
-Declare a variable [[newline_flag]] to determine whether or not to print a
-newline after printing the rest of the given strings, i.e.
-<<Print a newline unless the [[-n]] option was given.>>=
-if (newline_flag)
-    putchar('\n');
-@
-
-When the \cee{-n} option is given, set \cee{newline_flag} to \cee{0},
-thereby disabling the printing of the trailing newline.
-<<Handle [[-n]].>>=
-case 'n':
-    newline_flag = 0;
-    break;
-@
-
-By default, print a trailing newline.
-<<Process given options.>>=
-/* Flag set by '-n'. */
-int newline_flag = 1;
-
-@
-
-
-\subsection{Looping Through Given Options}
-
-<<Process given options.>>=
-int c;
-
-while (<<Process each option until [[EOF]].>>) {
-    switch (c) {
-    <<Handle [[-n]].>>
-    <<Handle illegal options.>>
-    }
+\marginnote{%
+  \say{%
+    The [[getopt]] function gets the next option argument from the argument list
+    specified by the [[argv]] and [[argc]] arguments. Normally these values come
+    directly from the arguments received by [[main]].%
+  } -- \citealp{gnu-getopt}
 }
-@
 
-
-\todoo{Describe this, esp. \cee{getopt}}
-<<Process each option until [[EOF]].>>=
-(c = getopt(argc, argv, "<<legal options>>")) != EOF
-@
-
-
-If the user gives an illegal option, i.e. one not included in the
-[[<<legal options>>]], display the [[usage]] information and
-return a non-zero status code.
-
-<<Handle illegal options.>>=
-case '?':
-    usage();
-    return 1;
-@
-
-
-\section{Echoing Strings}
-
-Otherwise, loop through the remainder of \cee{argv} and print each string,
-followed by a space. Unless the current string is the last one,
-i.e. \cee{index == argc - 1}, in which case, do {\bf not} print a space.
-<<Write a space unless this is the last string.>>=
-if (index < argc - 1)
-    putchar(' ');
-@
-
-
-\todoo{Describe \cee{optind}}
-<<Print each string, separated by a space.>>=
-int index;
-
-for (index = optind; index < argc; index++) {
-    printf("%s", argv[index]);
-    <<Write a space unless this is the last string.>>
-}
-@
+<<Include headers.>>=
+#include <getopt.h>
+@ %def getopt
+@ %def opterr
+@ %def optind
+@ %def optopt
 
 
 \section{The \cee{usage} Function}
 
-Display information on how to use [[echo]], including [[<<legal options>>]].
-<<*>>=
+\begin{marginfigure}
+<<Forward declarations.>>=
+void usage();
+@
+\end{marginfigure}
+
+
+Define the [[usage]] function, which displays information about how to use
+\cee{echo}, including [[<<known options>>]].
+
+<<Define the [[usage]] function.>>=
 void usage()
 {
     printf("Usage: echo [-n] [string ...]\n");
@@ -187,21 +131,169 @@ void usage()
 @
 
 
-% \newpage
-% \chapter{Chunks}
-% \nowebchunks
+\section{Processing Options}
+
+Set [[opterr]] to \cee{0} to tell [[getopt]] not to print an error message upon
+encountering un[[<<known options>>]].
+
+<<Process given options.>>=
+opterr = 0;
+
+@
 
 
-% \chapter{Index}
-% \nowebindex
+\begin{marginfigure}
+  \cee{echo} accepts \cee{-n} and prints other options.
+
+<<known options>>=
+n
+@
+\end{marginfigure}
 
 
-% \bibliography{echo}
-% \bibliographystyle{plainnat}
+\subsection{\cee{-n} (do not print a trailing newline)}
+
+Declare a variable [[newline_flag]] to determine whether or not to print a
+newline after printing the rest of the given strings.
+
+<<Print a newline unless the [[-n]] option was given.>>=
+if (newline_flag)
+    putchar('\n');
+@
+
+
+When the \cee{-n} option is given, set [[newline_flag]] to \cee{0},
+thereby disabling the printing of the trailing newline.
+
+<<Handle [[-n]].>>=
+case 'n':
+    newline_flag = 0;
+    break;
+@
+
+
+By default, print a trailing newline.
+
+<<Process given options.>>=
+int newline_flag = 1;
+
+@
+
+
+\subsection{Handling Unknown Options}
+
+If the user gives an unknown option, i.e. one not included in the
+[[<<known options>>]], decrement [[optind]] by \cee{1} in order to print it
+later.
+
+\marginnote{%
+  \say{%
+    This variable is set by [[getopt]] to the index of the next element of the
+    [[argv]] array to be processed.%
+  } -- \citealp{gnu-getopt}
+}
+
+<<Handle unknown options.>>=
+case '?':
+    optind--;
+    break;
+@
 
 
 \newpage
-\listoftodos[To-Do]
+\subsection{Looping Through Given Options}
+
+<<Process given options.>>=
+int c;
+
+while (<<Process known options until [[EOF]].>>) {
+    switch (c) {
+    <<Handle [[-n]].>>
+    <<Handle unknown options.>>
+    }
+}
+@
+
+
+Stop processing options when [[optopt]] is non-zero.
+
+\marginnote{%
+  \say{%
+    When [[getopt]] encounters an unknown option character... it stores that
+    option character in this variable.%
+  } -- \citealp{gnu-getopt}
+}
+
+<<Process known options until [[EOF]].>>=
+!optopt
+@
+
+
+Otherwise, process each known option as [[c]] until [[EOF]].
+
+<<Process known options until [[EOF]].>>=
+&& (c = getopt(argc, argv, "<<known options>>")) != EOF
+@
+
+
+\section{Echoing Strings}
+
+\begin{marginfigure}
+<<print a space>>=
+putchar(' ');
+@
+
+<<Print the current string.>>=
+printf("%s", argv[index]);
+@
+\end{marginfigure}
+
+Loop through [[argv]], starting at [[optind]], and [[<<print a space>>]] between
+each string.
+
+<<Print each string, separated by a space.>>=
+for (int index = optind; index < argc; index++) {
+    <<Print the current string.>>
+    <<Print a space unless the current string is the last argument.>>
+}
+@ %def index
+
+\begin{marginfigure}
+<<the current string is not the last argument>>=
+index < argc - 1
+@
+\end{marginfigure}
+
+If [[index]] is less than [[argc]] \cee{- 1} then
+[[<<the current string is not the last argument>>]], so [[<<print a space>>]].
+
+<<Print a space unless the current string is the last argument.>>=
+if (<<the current string is not the last argument>>)
+    <<print a space>>
+@
+
+
+\newpage
+\section{Full Listing}
+
+\inputc{echo.c}
+
+
+\newpage
+\section{Chunks}
+\nowebchunks
+
+
+\section{Index}
+\nowebindex
+
+
+\bibliography{echo}
+\bibliographystyle{plainnat}
+
+
+% \newpage
+% \listoftodos[To-Do]
 
 
 \end{document}
