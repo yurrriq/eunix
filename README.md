@@ -1,6 +1,6 @@
 # eunix
 
-*Porting UNIX tool for my own edification*
+*Rewriting UNIX tool for my own edification*
 
 - [echo][echo.pdf]
 
