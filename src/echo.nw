@@ -215,7 +215,7 @@ while (<<Process known options until [[EOF]].>>) {
 @
 
 
-Stop processing options when [[optopt]] is non-zero.
+Stop processing options when [[optopt]] is nonzero.
 
 \marginnote{%
   \say{%
