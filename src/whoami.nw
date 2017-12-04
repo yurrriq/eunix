@@ -45,6 +45,9 @@
 <<Include headers.>>
 
 
+<<Define constants.>>
+
+
 <<Forward declarations.>>
 
 
@@ -89,20 +92,30 @@ Include the core input and output functions from the C standard library.
 @ %def EOF
 @ %def printf
 
-\todoo{Describe sys/types.h}
+From
+\href{http://pubs.opengroup.org/onlinepubs/009695399/basedefs/sys/types.h.html}{\cee{sys/types.h}}
+import [[uid_t]], a data type for user IDs.
 
 <<Include headers.>>=
 #include <sys/types.h>
 @ %def uid_t
 
-\todoo{Describe pwd.h}
+From
+\href{http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pwd.h.html}{\cee{pwd.h}}
+import the struct, [[passwd]], which notably includes the member, \cee{pw_name},
+and has a constructor function, [[getpwuid]].
 
 <<Include headers.>>=
 #include <pwd.h>
 @ %def passwd
 @ %def getpwuid
+@ %def pw->pw_name
 
-\todoo{Describe unistd.h}
+From
+\href{http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html}{\cee{unistd.h}}
+import the function,
+\href{http://pubs.opengroup.org/onlinepubs/9699919799/functions/geteuid.html}{[[geteuid]]},
+which returns the effective user ID of the calling process.
 
 <<Include headers.>>=
 #include <unistd.h>
@@ -158,38 +171,45 @@ if (getopt(argc, argv, "") != EOF) {
 
 \section{Printing the Current User's Name}
 
-\todoo{Describe the variables}
+Define a constant, [[NO_UID]], to represent the case when [[geteuid]] returns
+\cee{-1}, which in \cee{whoami} will signify failureto find the user ID.
 
-<<Print the user name associated with the current effective user ID.>>=
-struct passwd *pw;
-uid_t uid;
+<<Define constants.>>=
 uid_t NO_UID = -1;
-
-@ %def uid
 @ %def NO_UID
 
+Declare the variables [[uid]], to store the current user ID, and [[pw]], to
+store further information about the current user.
 
-Get the effective user ID.
+<<Print the user name associated with the current effective user ID.>>=
+uid_t uid;
+struct passwd *pw;
+@ %def uid
+
+
+Get the effective user ID and store it as [[uid]].
 
 <<Print the user name associated with the current effective user ID.>>=
 uid = geteuid();
 
 @
 
-\todoo{Describe this check}
+Check whether the effective user ID is [[NO_UID]], in which case we won't be
+able to [[<<find a user with a matching [[uid]]>>]].
 
 <<the user ID is [[NO_UID]]>>=
 uid == NO_UID
 @
 
-Search the user database for an entry with a matching [[uid]].
-\todoo{Describe getpwuid and what it means to fail}
+Search the user database for an entry with a matching [[uid]]. If
+\href{http://pubs.opengroup.org/onlinepubs/9699919799/functions/getpwuid.html}{[[getpwuid]]}
+fails, it returns a null pointer.
 
 <<find a user with a matching [[uid]]>>=
 pw = getpwuid(uid)
 @
 
-If [[<<the user ID is [[NO_UID]]>> or we're unable to
+If [[<<the user ID is [[NO_UID]]>>]] or we're unable to
 [[<<find a user with a matching [[uid]]>>]], print a descriptive error message
 and return a nonzero status code.
 
@@ -200,8 +220,6 @@ if (<<the user ID is [[NO_UID]]>> || !(<<find a user with a matching [[uid]]>>))
     return 1;
 }
 @
-
-% \todoo{Describe the passwd struct here (or earlier)}
 
 <<Print the user name associated with the current effective user ID.>>=
 puts(pw->pw_name);
@@ -227,8 +245,8 @@ puts(pw->pw_name);
 \bibliographystyle{plainnat}
 
 
-\newpage
-\listoftodos[To-Do]
+% \newpage
+% \listoftodos[To-Do]
 
 
 \end{document}

@@ -5,6 +5,9 @@
 #include <getopt.h>
 
 
+uid_t NO_UID = -1;
+
+
 void usage();
 
 
@@ -15,10 +18,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    struct passwd *pw;
     uid_t uid;
-    uid_t NO_UID = -1;
-
+    struct passwd *pw;
     uid = geteuid();
 
     if (uid == NO_UID || !(pw = getpwuid(uid))) {

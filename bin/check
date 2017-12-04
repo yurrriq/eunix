@@ -10,7 +10,7 @@ set -e
 check_echo ()
 {
     (>&2 echo "===> echo $@")
-    diff <(echo $@) <(bin/echo $@)
+    diff <(cd /; echo $@) <(bin/echo $@)
 }
 
 
@@ -19,3 +19,16 @@ check_echo -n dash n
 check_echo -x ignore unknown options
 check_echo -n -x known then unknown
 check_echo -x -n unknown then known
+
+
+### whoami ###
+
+check_whoami ()
+{
+    (>&2 echo "===> whoami $@")
+    diff <(cd /usr; bin/whoami $@ 2>&1 | head -n1) <(bin/whoami $@ 2>&1 | head -n1)
+}
+
+
+check_whoami
+check_whoami -x ignore unknown options
