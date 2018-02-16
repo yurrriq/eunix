@@ -22,9 +22,9 @@ latexmk_flags += -cd -pdf
 	indent -kr -nut $@
 
 .tex.pdf:
-	ln -sf ../src/$(notdir $*).{bib,c} ../src/preamble.tex docs/
+	ln -sf ../src/$(notdir $*).c ../src/eunix.bib ../src/preamble.tex docs/
 	latexmk ${latexmk_flags} $<
-	rm $*.{bib,c} docs/preamble.tex
+	rm $*.c docs/{eunix.bib,preamble.tex}
 
 
 

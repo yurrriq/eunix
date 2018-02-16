@@ -241,7 +241,7 @@ puts(pw->pw_name);
 \nowebindex
 
 
-\bibliography{whoami}
+\bibliography{eunix}
 \bibliographystyle{plainnat}
 
 
