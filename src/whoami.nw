@@ -5,10 +5,10 @@
 \input{preamble.tex}
 
 
-% \usepackage[xindy,nopostdot]{glossaries}
-% \makeglossaries
-% \input{glossary}
-% \renewcommand*{\glstextformat}[1]{\textsl{#1}}
+%% \usepackage[xindy,nopostdot]{glossaries}
+%% \makeglossaries
+%% \input{glossary}
+%% \renewcommand*{\glstextformat}[1]{\textsl{#1}}
 
 
 \hypersetup{
@@ -228,25 +228,10 @@ puts(pw->pw_name);
 
 \newpage
 \section{Full Listing}
-
 \inputc{whoami.c}
 
 
-\newpage
-\section{Chunks}
-\nowebchunks
-
-
-\section{Index}
-\nowebindex
-
-
-\bibliography{eunix}
-\bibliographystyle{plainnat}
-
-
-% \newpage
-% \listoftodos[To-Do]
+\input{postamble.tex}
 
 
 \end{document}

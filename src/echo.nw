@@ -1,14 +1,8 @@
-% -*- ess-noweb-code-mode: c-mode; -*-
+%% -*- ess-noweb-code-mode: c-mode; -*-
 \documentclass{tufte-handout}
 
 
 \input{preamble.tex}
-
-
-% \usepackage[xindy,nopostdot]{glossaries}
-% \makeglossaries
-% \input{glossary}
-% \renewcommand*{\glstextformat}[1]{\textsl{#1}}
 
 
 \hypersetup{
@@ -17,7 +11,7 @@
   pdftitle={eunix: echo},
   pdfauthor={Eric Bailey <eric@ericb.me>},
   pdfsubject={A reimplementation of echo for my own edification},
-  pdfkeywords={UNIX, C language, learning},
+  pdfkeywords={UNIX, C language, C99, learning, echo},
   colorlinks=true,
   linkcolor=ErlangRed,
   urlcolor=ErlangRed
@@ -275,25 +269,10 @@ if (<<the current string is not the last argument>>)
 
 \newpage
 \section{Full Listing}
-
 \inputc{echo.c}
 
 
-\newpage
-\section{Chunks}
-\nowebchunks
-
-
-\section{Index}
-\nowebindex
-
-
-\bibliography{eunix}
-\bibliographystyle{plainnat}
-
-
-% \newpage
-% \listoftodos[To-Do]
+\input{postamble.tex}
 
 
 \end{document}
