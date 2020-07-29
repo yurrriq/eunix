@@ -208,7 +208,8 @@ while (<<Process known options until [[EOF]].>>) {
 @
 
 
-Stop processing options when [[optopt]] is nonzero.
+Stop processing options when [[optopt]] is set.
+Otherwise, process each known option as [[c]] until [[EOF]].
 
 \marginnote{%
   \say{%
@@ -218,14 +219,7 @@ Stop processing options when [[optopt]] is nonzero.
 }
 
 <<Process known options until [[EOF]].>>=
-!optopt
-@
-
-
-Otherwise, process each known option as [[c]] until [[EOF]].
-
-<<Process known options until [[EOF]].>>=
-&& (c = getopt(argc, argv, "<<known options>>")) != EOF
+optopt == '?' && (c = getopt(argc, argv, "<<known options>>")) != EOF
 @
 
 

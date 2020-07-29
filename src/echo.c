@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     int c;
 
-    while (!optopt && (c = getopt(argc, argv, "n")) != EOF) {
+    while (optopt == '?' && (c = getopt(argc, argv, "n")) != EOF) {
         switch (c) {
         case 'n':
             newline_flag = 0;
