@@ -35,5 +35,5 @@ int main(int argc, char *argv[])
 
 void usage()
 {
-    printf("Usage: whoami\n");
+    fprintf(stderr, "Try 'whoami --help' for more information.\n");
 }

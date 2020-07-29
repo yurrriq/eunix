@@ -150,14 +150,14 @@ Define the [[usage]] function, which displays information about how to use
 <<Define the [[usage]] function.>>=
 void usage()
 {
-    printf("Usage: whoami\n");
+    fprintf(stderr, "Try 'whoami --help' for more information.\n");
 }
 @
 
 
 \section{Processing Options}
 
-If any optiosn are given, complain about the first one (via [[getopt]]), print
+If any options are given, complain about the first one (via [[getopt]]), print
 the [[usage]] information, and return a nonzero status code.
 
 <<Process given options.>>=
