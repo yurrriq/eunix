@@ -1,19 +1,18 @@
-{
-  nur ? import <nur> {},
-  pkgs ? import ./nix/nixpkgs.nix { inherit nur; },
-  src ? pkgs.nix-gitignore.gitignoreRecursiveSource [".git/"] ./.
+{ pkgs ? import ./nix
+, src ? pkgs.nix-gitignore.gitignoreSource ./.
 }:
 
 pkgs.stdenv.mkDerivation rec {
   pname = "eunix";
-  version = "0.0.1";
+  version = builtins.readFile ./VERSION;
   inherit src;
 
   FONTCONFIG_FILE = pkgs.makeFontsConf {
     fontDirectories = [ pkgs.iosevka ];
   };
 
-  buildInputs = with pkgs; [
+  nativeBuildInputs = with pkgs; [
+    bats
     gcc
     indent
     iosevka
@@ -23,10 +22,12 @@ pkgs.stdenv.mkDerivation rec {
     xelatex-noweb
   ];
 
-  postInstall = ''
+  makeFlags = [
+    "prefix=${placeholder "out"}"
+  ];
+
+  preInstall = ''
     install -dm755 "$out/bin"
-    cp bin/* "$_/"
     install -dm755 "$out/docs"
-    cp docs/*.pdf "$_/"
   '';
 }

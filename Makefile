@@ -1,11 +1,10 @@
-CFLAGS ?= -Wall -std=c99
+prefix ?= $(error Must set prefix)
+CFLAGS ?= -Wall -Werror -std=c99
 cpif   ?= | cpif
 NW_SRC := $(wildcard src/*.nw)
 C_SRC  := ${NW_SRC:.nw=.c}
 PDF    := $(patsubst src/%.nw,docs/%.pdf,${NW_SRC})
 BIN    := $(patsubst src/%.c,bin/%,${C_SRC})
-
-prefix ?= docs
 
 
 ifneq (,$(findstring B,$(MAKEFLAGS)))
@@ -27,19 +26,27 @@ src/%.pdf: src/%.tex src/%.c
 	latexmk ${latexmk_flags} $<
 
 
-all: ${C_SRC}
+src: ${C_SRC}
+
+bin: ${BIN}
+
+doc: ${PDF}
 
 
-install: ${BIN} ${PDF}
+install: bin doc
+	install -dm755 ${prefix}/bin
+	install -m755 -t ${prefix}/bin ${BIN}
+	install -dm755 ${prefix}/docs
+	install -m755 -t ${prefix}/docs ${PDF}
 
 
-check:
-	@ bin/check
+check: eunix.bats bin
+	@ bats $^
 
 
 clean:
 	$(foreach pdf,${PDF},latexmk ${latexmk_flags} -f -C ${pdf};)
-	rm -fR ${BIN} ${C_SRC}{~,} docs/_minted-*
+	rm -fR ${BIN} ${C_SRC}{~,} src/_minted-*
 
 
 src/%.tex: src/%.nw
@@ -47,11 +54,8 @@ src/%.tex: src/%.nw
 
 
 bin/%: src/%.c
-	@ mkdir -p $(dir $@)
 	${CC} ${CFLAGS} -o $@ $<
 
-${prefix}/%.pdf: src/%.pdf
+docs/%.pdf: src/%.pdf
+	install -dm755 $(@D)
 	install -m644 $< $@
-
-nix/nixpkgs.json:
-	@ nix-prefetch-github NixOS nixpkgs --rev master >$@

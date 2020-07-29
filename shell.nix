@@ -1,13 +1,11 @@
-{
-  nur ? import <nur> {},
-  pkgs ? import ./nix/nixpkgs.nix { inherit nur; }
-}:
+{ pkgs ? import ./nix }:
 
 pkgs.mkShell {
-  FONTCONFIG_FILE = pkgs.makeFontsConf {
-    fontDirectories = [ pkgs.iosevka ];
-  };
-  buildInputs = [
-    pkgs.nix-prefetch-github
-  ] ++ (import ./. { inherit pkgs; }).buildInputs;
+  inherit (pkgs.eunix) FONTCONFIG_FILE;
+  buildInputs = with pkgs; (
+    [
+      niv
+      nixpkgs-fmt
+    ] ++ eunix.nativeBuildInputs
+  );
 }
