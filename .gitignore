@@ -278,4 +278,10 @@ TSWLatexianTemp*
 # expex forward references with \gathertags
 *-tags.tex
 
+.ccls-cache/
 /result*
+
+
+# Added by cargo
+
+/target

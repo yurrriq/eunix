@@ -1,0 +1,7 @@
+[package]
+name = "reunix"
+version = "0.0.2"
+edition = "2018"
+
+[dependencies]
+clap = "~2.33"
