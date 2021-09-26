@@ -60,7 +60,7 @@ checksum = "a2a5ac8f984bfcf3a823267e5fde638acc3325f6496633a5da6bb6eb2171e103"
 
 [[package]]
 name = "reunix"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "clap",
 ]
