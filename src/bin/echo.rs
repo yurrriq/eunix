@@ -21,7 +21,7 @@ fn main() {
         .arg(Arg::with_name("STRING").multiple(true))
         .get_matches();
 
-    let strings: Vec<&str> =
+    let strings : Vec<&str> =
         args.values_of("STRING").unwrap_or_default().collect();
 
     strings.iter().enumerate().for_each(|(i, s)| {
