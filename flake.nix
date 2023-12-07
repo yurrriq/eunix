@@ -74,7 +74,7 @@
         "x86_64-linux"
       ];
 
-      perSystem = { config, pkgs, self', system, ... }: {
+      perSystem = { config, lib, pkgs, self', system, ... }: {
         _module.args.pkgs = import nixpkgs {
           overlays = [
             inputs.emacs-overlay.overlay
@@ -86,6 +86,7 @@
 
         devShells.default = pkgs.mkShell {
           inherit (self'.packages.default) FONTCONFIG_FILE;
+          RUST_BACKTRACE = 1;
 
           inputsFrom = [
             config.pre-commit.devShell
@@ -189,6 +190,10 @@
           settings.formatter = {
             clang-format.options = [
               "-style=file"
+            ];
+            rustfmt.options = lib.mkForce [
+              "--edition"
+              "2021"
             ];
           };
         };
