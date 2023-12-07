@@ -1,38 +1,35 @@
 extern crate clap;
 
-use std::str;
+use clap::Parser;
 
-use clap::{crate_version, App, AppSettings, Arg};
+#[derive(Parser)]
+#[command(trailing_var_arg = true, allow_hyphen_values = true)]
+#[clap(disable_help_flag = true, disable_version_flag = true)]
+struct Args {
+    /// Do not output a newline
+    #[arg(short = 'n', long)]
+    no_newline : bool,
+
+    /// Do not separate arguments with spaces
+    #[arg(short = 's', long)]
+    no_space : bool,
+
+    string : Vec<String>,
+}
 
 fn main() {
-    let args = App::new("echo")
-        .setting(AppSettings::TrailingVarArg)
-        .version(crate_version!())
-        .arg(
-            Arg::with_name("no_newline")
-                .short("n")
-                .help("Do not output a newline"),
-        )
-        .arg(
-            Arg::with_name("no_space")
-                .short("s")
-                .help("Do not separate arguments with spaces"),
-        )
-        .arg(Arg::with_name("STRING").multiple(true))
-        .get_matches();
-
-    let strings : Vec<&str> =
-        args.values_of("STRING").unwrap_or_default().collect();
+    let args = Args::parse();
+    let strings : Vec<_> = args.string;
 
     strings.iter().enumerate().for_each(|(i, s)| {
         print!("{}", s);
 
-        if !args.is_present("no_space") && i < strings.len() - 1 {
+        if !args.no_space && i < strings.len() - 1 {
             print!(" ");
         }
     });
 
-    if !args.is_present("no_newline") {
+    if !args.no_newline {
         println!()
     }
 }
