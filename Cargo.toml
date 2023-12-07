@@ -1,7 +1,15 @@
 [package]
 name = "reunix"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
+publish = false
+
+[workspace]
+
+[[bin]]
+name = "echo"
+path = "src/bin/echo.rs"
 
 [dependencies]
 clap = { version = "~4.4", features = ["derive"] }
+trycmd = "~0.14"

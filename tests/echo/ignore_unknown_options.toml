@@ -1,0 +1,3 @@
+bin.name = "echo"
+args = ["-x", "ignore", "unknown", "options"]
+binary = true

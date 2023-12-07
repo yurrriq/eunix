@@ -1,0 +1,3 @@
+bin.name = "echo"
+args = ["a", "simple", "test"]
+binary = true

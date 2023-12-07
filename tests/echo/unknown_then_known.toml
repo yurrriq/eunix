@@ -1,0 +1,3 @@
+bin.name = "echo"
+args = ["-x", "-n", "unknown", "then", "known"]
+binary = true
