@@ -19,7 +19,6 @@ latexmk_flags += -cd -pdf
 
 %.c: %.nw
 	notangle $< ${cpif} $@
-	indent -kr -nut $@
 
 
 src/%.pdf: src/%.tex src/%.c

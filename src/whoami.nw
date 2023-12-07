@@ -43,15 +43,11 @@
 <<*>>=
 <<Include headers.>>
 
-
 <<Define constants.>>
-
 
 <<Forward declarations.>>
 
-
 <<Define the [[main]] function.>>
-
 
 <<Define the [[usage]] function.>>
 @
@@ -84,7 +80,22 @@ int main(int argc, char *argv[])
 \newpage
 \section{Include Headers}
 
+<<Include headers.>>=
+#include <getopt.h>
+@ %def getopt
+
 Include the core input and output functions from the C standard library.
+
+From
+\href{http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pwd.h.html}{\cee{pwd.h}}
+import the struct, [[passwd]], which notably includes the member, \cee{pw_name},
+and has a constructor function, [[getpwuid]].
+
+<<Include headers.>>=
+#include <pwd.h>
+@ %def passwd
+@ %def getpwuid
+@ %def pw->pw_name
 
 <<Include headers.>>=
 #include <stdio.h>
@@ -98,17 +109,6 @@ import [[uid_t]], a data type for user IDs.
 <<Include headers.>>=
 #include <sys/types.h>
 @ %def uid_t
-
-From
-\href{http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pwd.h.html}{\cee{pwd.h}}
-import the struct, [[passwd]], which notably includes the member, \cee{pw_name},
-and has a constructor function, [[getpwuid]].
-
-<<Include headers.>>=
-#include <pwd.h>
-@ %def passwd
-@ %def getpwuid
-@ %def pw->pw_name
 
 From
 \href{http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html}{\cee{unistd.h}}
@@ -129,10 +129,6 @@ Include the GNU [[getopt]] function from the GNU C Library.
     directly from the arguments received by [[main]].%
   } -- \citealp{gnu-getopt}
 }
-
-<<Include headers.>>=
-#include <getopt.h>
-@ %def getopt
 
 
 \section{The \cee{usage} Function}
@@ -214,8 +210,7 @@ and return a nonzero status code.
 
 <<Print the user name associated with the current effective user ID.>>=
 if (<<the user ID is [[NO_UID]]>> || !(<<find a user with a matching [[uid]]>>)) {
-    printf("Cannot find name for user ID %lu\n",
-           (unsigned long int) uid);
+    printf("Cannot find name for user ID %lu\n", (unsigned long int)uid);
     return 1;
 }
 @

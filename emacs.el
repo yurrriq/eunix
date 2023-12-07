@@ -18,7 +18,7 @@
 (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
 (global-set-key (kbd "s-u") 'revert-buffer)
 
-(set-face-attribute 'default nil :family "Iosevka" :height 110)
+(set-face-attribute 'default nil :family "Iosevka Nerd Font" :height 110)
 
 (eval-when-compile
   (require 'use-package))
@@ -98,11 +98,32 @@
 
 (use-package nix-mode)
 
+(eval-and-compile
+  (defun yurrriq/noweb-load-path ()
+    (file-name-as-directory
+      (expand-file-name "site-lisp"
+        (expand-file-name "emacs"
+          (expand-file-name "share"
+            (file-name-directory
+              (directory-file-name
+                (file-name-directory
+                  (executable-find "noweb"))))))))))
+
+(use-package noweb-mode
+  :load-path (lambda () (list (yurrriq/noweb-load-path)))
+  :mode ("\\.nw\\'")
+  :demand)
+
 (use-package paredit
   :hook (emacs-lisp-mode . paredit-mode))
 
 (use-package rainbow-delimiters
   :hook (emacs-lisp-mode . rainbow-delimiters-mode))
+
+(defun yurrriq/rustic-mode-hook ()
+  ;; NOTE: https://github.com/brotzeit/rustic/issues/253
+  (when buffer-file-name
+    (setq-local buffer-save-without-query t)))
 
 (use-package rustic
   :bind (:map rustic-mode-map
@@ -114,7 +135,7 @@
               ("C-c C-c q" . lsp-workspace-restart)
               ("C-c C-c Q" . lsp-workspace-shutdown)
               ("C-c C-c s" . lsp-rust-analyzer-status))
-  :hook (rustic-mode . eb/rustic-mode-hook)
+  :hook (rustic-mode . yurrriq/rustic-mode-hook)
   :config
   (setq rustic-format-on-save t)
   ;; https://rust-lang.github.io/rustfmt/
@@ -133,11 +154,6 @@
                   ("use_try_shorthand" . "true")
                   ("wrap_comments" . "true")))
     (add-to-list 'rustic-rustfmt-config-alist item)))
-
-(defun eb/rustic-mode-hook ()
-  ;; NOTE: https://github.com/brotzeit/rustic/issues/253
-  (when buffer-file-name
-    (setq-local buffer-save-without-query t)))
 
 (use-package smex
   :demand
