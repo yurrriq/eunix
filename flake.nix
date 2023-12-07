@@ -2,16 +2,38 @@
   description = "Rewriting UNIX tools for my own edification";
 
   inputs = {
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
+    emacs-overlay = {
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-stable.follows = "nixpkgs-stable";
+      };
+      url = "github:nix-community/emacs-overlay";
+    };
     fenix = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/fenix";
     };
     flake-parts.url = "github:hercules-ci/flake-parts";
-    naersk.url = "github:nmattia/naersk";
+    flake-utils.url = "github:numtide/flake-utils";
+    naersk = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nmattia/naersk";
+    };
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
-    treefmt-nix.url = "github:numtide/treefmt-nix";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/release-23.11";
+    pre-commit-hooks-nix = {
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-stable.follows = "nixpkgs-stable";
+      };
+      url = "github:cachix/pre-commit-hooks.nix";
+    };
+    treefmt-nix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:numtide/treefmt-nix";
+    };
   };
 
   nixConfig = {
