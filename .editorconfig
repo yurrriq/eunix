@@ -22,3 +22,6 @@ indent_style = tab
 
 [VERSION]
 insert_final_newline = false
+
+[tests/echo/{dash_n,known_then_unknown}.stdout]
+insert_final_newline = false
