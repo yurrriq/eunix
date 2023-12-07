@@ -37,12 +37,9 @@
 <<*>>=
 <<Include headers.>>
 
-
 <<Forward declarations.>>
 
-
 <<Define the [[main]] function.>>
-
 
 <<Define the [[usage]] function.>>
 @
@@ -77,15 +74,6 @@ int main(int argc, char *argv[])
 \newpage
 \section{Include Headers}
 
-Include the core input and output functions from the C standard library.
-
-<<Include headers.>>=
-#include <stdio.h>
-@ %def EOF
-@ %def printf
-@ %def putchar
-
-
 Include the GNU [[getopt]] function from the GNU C Library.
 
 \marginnote{%
@@ -102,6 +90,15 @@ Include the GNU [[getopt]] function from the GNU C Library.
 @ %def opterr
 @ %def optind
 @ %def optopt
+
+
+Include the core input and output functions from the C standard library.
+
+<<Include headers.>>=
+#include <stdio.h>
+@ %def EOF
+@ %def printf
+@ %def putchar
 
 
 \section{The \cee{usage} Function}

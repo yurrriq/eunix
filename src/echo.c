@@ -1,9 +1,7 @@
-#include <stdio.h>
 #include <getopt.h>
-
+#include <stdio.h>
 
 void usage();
-
 
 int main(int argc, char *argv[])
 {
@@ -35,7 +33,6 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
 
 void usage()
 {
