@@ -3,11 +3,24 @@
 
   inputs = {
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    fenix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/fenix";
+    };
     flake-parts.url = "github:hercules-ci/flake-parts";
     naersk.url = "github:nmattia/naersk";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     treefmt-nix.url = "github:numtide/treefmt-nix";
+  };
+
+  nixConfig = {
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
   };
 
   outputs = inputs@{ flake-parts, nixpkgs, self, ... }:
@@ -65,6 +78,7 @@
         _module.args.pkgs = import nixpkgs {
           overlays = [
             inputs.emacs-overlay.overlay
+            inputs.fenix.overlays.default
             self.overlays.default
           ];
           inherit system;
@@ -79,17 +93,22 @@
           ];
 
           nativeBuildInputs = with pkgs; [
-            cargo
             ccls
-            clippy
             direnv
+            (
+              fenix.complete.withComponents [
+                "cargo"
+                "clippy"
+                "rust-src"
+                "rustc"
+                "rustfmt"
+              ]
+            )
             myEmacs
             nix-direnv
             nixpkgs-fmt
             rnix-lsp
-            rust-analyzer
-            rustc
-            rustfmt
+            rust-analyzer-nightly
           ];
         };
 
@@ -162,7 +181,10 @@
             clang-format.enable = true;
             deadnix.enable = true;
             nixpkgs-fmt.enable = true;
-            rustfmt.enable = true;
+            rustfmt = {
+              enable = true;
+              package = pkgs.fenix.complete.rustfmt;
+            };
           };
           settings.formatter = {
             clang-format.options = [
