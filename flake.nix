@@ -108,12 +108,12 @@
         };
 
         devShells.default = pkgs.mkShell {
-          inherit (self'.packages.default) FONTCONFIG_FILE;
+          inherit (self'.packages.eunix) FONTCONFIG_FILE;
           RUST_BACKTRACE = 1;
 
           inputsFrom = [
             config.pre-commit.devShell
-            self'.packages.default
+            self'.packages.eunix
           ];
 
           nativeBuildInputs = with pkgs; [

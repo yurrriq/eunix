@@ -1,62 +1,55 @@
-\documentclass{tufte-handout}
-
+\documentclass[a4paper]{tufte-handout}
 
 \input{preamble.tex}
-
 
 \hypersetup{
   pdffitwindow=true,
   pdfstartview={FitH},
   pdftitle={eunix: echo},
   pdfauthor={Eric Bailey <eric@ericb.me>},
-  pdfsubject={A reimplementation of echo for my own edification},
-  pdfkeywords={UNIX, C language, C99, learning, echo},
+  pdfsubject={Reimplementations of echo in C and Rust for my own edification},
+  pdfkeywords={UNIX, C language, C99, Rust, learning, echo},
   colorlinks=true,
   linkcolor=ErlangRed,
   urlcolor=ErlangRed
 }
 
-
 \title{eunix: echo}
-
 
 \date{%
   October 31, 2017
   \thanks{Last updated \today}
 }
 
-
 \begin{document}
-
 
 \maketitle
 @
 
+\begin{abstract}
+  Reimplementations of \cee{echo} in C and Rust for my own edification.
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+\section{C}
 
 \begin{marginfigure}
-<<*>>=
+<<src/echo.c>>=
 <<Include headers.>>
 
 <<Forward declarations.>>
 
-<<Define the [[main]] function.>>
+<<Define the \cee{main} function.>>
 
 <<Define the [[usage]] function.>>
 @
 \end{marginfigure}
 
+\subsection{The \cee{main} Function}
 
-\begin{abstract}
-  A reimplementation of \cee{echo} for my own edification.
-\end{abstract}
-
-
-\tableofcontents
-
-
-\section{The \cee{main} Function}
-
-<<Define the [[main]] function.>>=
+<<Define the \cee{main} function.>>=
 int main(int argc, char *argv[])
 {
     <<Process given options.>>
@@ -70,9 +63,7 @@ int main(int argc, char *argv[])
 @ %def argc
 @ %def argv
 
-
-\newpage
-\section{Include Headers}
+\subsection{Include Headers}
 
 Include the GNU [[getopt]] function from the GNU C Library.
 
@@ -91,7 +82,6 @@ Include the GNU [[getopt]] function from the GNU C Library.
 @ %def optind
 @ %def optopt
 
-
 Include the core input and output functions from the C standard library.
 
 <<Include headers.>>=
@@ -100,15 +90,13 @@ Include the core input and output functions from the C standard library.
 @ %def printf
 @ %def putchar
 
-
-\section{The \cee{usage} Function}
+\subsection{The \cee{usage} Function}
 
 \begin{marginfigure}
 <<Forward declarations.>>=
 void usage();
 @
 \end{marginfigure}
-
 
 Define the [[usage]] function, which displays information about how to use
 \cee{echo}, including [[<<known options>>]].
@@ -120,8 +108,7 @@ void usage()
 }
 @
 
-
-\section{Processing Options}
+\subsection{Processing Options}
 
 Set [[opterr]] to \cee{0} to tell [[getopt]] not to print an error message upon
 encountering un[[<<known options>>]].
@@ -131,7 +118,6 @@ opterr = 0;
 
 @
 
-
 \begin{marginfigure}
   \cee{echo} accepts \cee{-n} and prints other options.
 
@@ -140,17 +126,20 @@ n
 @
 \end{marginfigure}
 
+\newthought{Declare a variable [[newline_flag]]} to determine whether or not to
+print a newline after printing the rest of the given strings.
 
-\subsection{\cee{-n} (do not print a trailing newline)}
+<<Process given options.>>=
+int newline_flag = 1;
 
-Declare a variable [[newline_flag]] to determine whether or not to print a
-newline after printing the rest of the given strings.
+@
+
+By default, print a trailing newline.
 
 <<Print a newline unless the [[-n]] option was given.>>=
 if (newline_flag)
     putchar('\n');
 @
-
 
 When the \cee{-n} option is given, set [[newline_flag]] to \cee{0},
 thereby disabling the printing of the trailing newline.
@@ -161,18 +150,7 @@ case 'n':
     break;
 @
 
-
-By default, print a trailing newline.
-
-<<Process given options.>>=
-int newline_flag = 1;
-
-@
-
-
-\subsection{Handling Unknown Options}
-
-If the user gives an unknown option, i.e. one not included in the
+\newthought{If the user gives an unknown option}, i.e. one not included in the
 [[<<known options>>]], decrement [[optind]] by \cee{1} in order to print it
 later.
 
@@ -189,9 +167,7 @@ case '?':
     break;
 @
 
-
-\newpage
-\subsection{Looping Through Given Options}
+\newthought{Loop through given options} and handle them appropriately.
 
 <<Process given options.>>=
 int c;
@@ -203,7 +179,6 @@ while (<<Process known options until [[EOF]].>>) {
     }
 }
 @
-
 
 Stop processing options when [[optopt]] is set.
 Otherwise, process each known option as [[c]] until [[EOF]].
@@ -219,8 +194,7 @@ Otherwise, process each known option as [[c]] until [[EOF]].
 optopt == '?' && (c = getopt(argc, argv, "<<known options>>")) != EOF
 @
 
-
-\section{Echoing Strings}
+\subsection{Echoing Strings}
 
 \begin{marginfigure}
 <<print a space>>=
@@ -256,13 +230,95 @@ if (<<the current string is not the last argument>>)
     <<print a space>>
 @
 
-
-\newpage
-\section{Full Listing}
+\subsection{Full Listing}
+\texttt{src/echo.c}
 \inputc{echo.c}
 
+\newpage
+\section{Rust}
+
+\begin{marginfigure}
+<<src/bin/echo.rs>>=
+<<Use the clap crate.>>
+
+<<Define the Args struct.>>
+
+<<Define the \rs{main} function.>>
+@
+\end{marginfigure}
+
+\subsection{The main function}
+
+<<Define the \rs{main} function.>>=
+fn main() {
+    <<Parse [[Args]].>>
+
+    <<Print strings separated by a space unless no\_space is set.>>
+
+    <<Print a newline unless no\_newline is set.>>
+}
+@
+
+\subsection{Dependencies}
+
+\todoo{Describe clap}
+
+<<Use the clap crate.>>=
+extern crate clap;
+
+use clap::Parser;
+@
+
+\subsection{Handling \rs{Args}}
+
+<<Define the Args struct.>>=
+#[derive(Parser)]
+#[command(trailing_var_arg = true, allow_hyphen_values = true)]
+#[clap(disable_help_flag = true, disable_version_flag = true)]
+struct Args {
+    /// Do not output a newline
+    #[arg(short = 'n', long)]
+    no_newline : bool,
+
+    /// Do not separate arguments with spaces
+    #[arg(short = 's', long)]
+    no_space : bool,
+
+    string : Vec<String>,
+}
+@ %def Args
+@ %def no_newline
+@ %def no_space
+
+<<Parse [[Args]].>>=
+let args = Args::parse();
+@
+
+\subsection{Echoing strings}
+
+<<Print strings separated by a space unless no\_space is set.>>=
+let strings : Vec<_> = args.string;
+
+strings.iter().enumerate().for_each(|(i, s)| {
+    print!("{}", s);
+
+    if !args.no_space && i < strings.len() - 1 {
+        print!(" ");
+    }
+});
+@
+
+<<Print a newline unless no\_newline is set.>>=
+if !args.no_newline {
+    println!()
+}
+@
+
+\newpage
+\subsection{Full Listing}
+\texttt{src/bin/echo.rs}
+\inputrs{bin/echo.rs}
 
 \input{postamble.tex}
-
 
 \end{document}

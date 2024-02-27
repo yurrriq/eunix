@@ -1,13 +1,13 @@
 [package]
 name = "reunix"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 publish = false
 
 [workspace]
 
 [[bin]]
-name = "echo"
+name = "echo-rs"
 path = "src/bin/echo.rs"
 
 [dependencies]
