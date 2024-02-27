@@ -37,6 +37,7 @@
   };
 
   nixConfig = {
+    commit-lockfile-summary = "build(deps): nix flake update";
     extra-substituters = [
       "https://nix-community.cachix.org"
     ];
@@ -128,9 +129,7 @@
               ]
             )
             myEmacs
-            nix-direnv
-            nixpkgs-fmt
-            rnix-lsp
+            nixd
             rust-analyzer-nightly
           ];
         };

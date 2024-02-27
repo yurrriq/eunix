@@ -18,7 +18,7 @@
 (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
 (global-set-key (kbd "s-u") 'revert-buffer)
 
-(set-face-attribute 'default nil :family "Iosevka Nerd Font" :height 110)
+(set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 110)
 
 (eval-when-compile
   (require 'use-package))
@@ -59,9 +59,10 @@
   :config (global-hl-todo-mode t))
 
 (use-package lsp-mode
-  :hook
-  (c-mode . lsp-deferred)
-  (rustic-mode . lsp-deferred)
+  :hook ((c-mode
+          nix-mode
+          rustic-mode)
+         . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
   (lsp-eldoc-render-all t)
@@ -71,17 +72,13 @@
   (lsp-rust-analyzer-server-display-inlay-hints t)
   (lsp-rust-server 'rust-analyzer)
   :config
-  (advice-add 'lsp :before #'direnv-update-environment)
-  (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
-                    :major-modes '(nix-mode)
-                    :server-id 'nix)))
+  (advice-add 'lsp :before #'direnv-update-environment))
 
 (use-package lsp-ui
   :hook
-  (c-mode . lsp-ui-mode)
-  (rustic-mode . lsp-ui-mode)
+  ((c-mode
+    rustic-mode)
+   . lsp-ui-mode)
   :custom
   (lsp-ui-peek-always-show t)
   (lsp-ui-doc-position 'bottom)
