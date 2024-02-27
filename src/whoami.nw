@@ -1,14 +1,11 @@
 \documentclass{tufte-handout}
 
-
 \input{preamble.tex}
-
 
 %% \usepackage[xindy,nopostdot]{glossaries}
 %% \makeglossaries
 %% \input{glossary}
 %% \renewcommand*{\glstextformat}[1]{\textsl{#1}}
-
 
 \hypersetup{
   pdffitwindow=true,
@@ -22,25 +19,20 @@
   urlcolor=ErlangRed
 }
 
-
 \title{eunix: whoami}
-
 
 \date{%
   November 29, 2017
   \thanks{Last updated \today}
 }
 
-
 \begin{document}
-
 
 \maketitle
 @
 
-
 \begin{marginfigure}
-<<*>>=
+<<src/whoami.c>>=
 <<Include headers.>>
 
 <<Define constants.>>
@@ -53,14 +45,11 @@
 @
 \end{marginfigure}
 
-
 \begin{abstract}
   A reimplementation of \cee{whoami} for my own edification.
 \end{abstract}
 
-
 \tableofcontents
-
 
 \section{The \cee{main} Function}
 
@@ -75,7 +64,6 @@ int main(int argc, char *argv[])
 }
 @ %def argc
 @ %def argv
-
 
 \newpage
 \section{Include Headers}
@@ -130,7 +118,6 @@ Include the GNU [[getopt]] function from the GNU C Library.
   } -- \citealp{gnu-getopt}
 }
 
-
 \section{The \cee{usage} Function}
 
 \begin{marginfigure}
@@ -138,7 +125,6 @@ Include the GNU [[getopt]] function from the GNU C Library.
 void usage();
 @
 \end{marginfigure}
-
 
 Define the [[usage]] function, which displays information about how to use
 \cee{whoami}.
@@ -149,7 +135,6 @@ void usage()
     fprintf(stderr, "Try 'whoami --help' for more information.\n");
 }
 @
-
 
 \section{Processing Options}
 
@@ -162,7 +147,6 @@ if (getopt(argc, argv, "") != EOF) {
     return 1;
 }
 @
-
 
 \section{Printing the Current User's Name}
 
@@ -180,7 +164,6 @@ store further information about the current user.
 uid_t uid;
 struct passwd *pw;
 @ %def uid
-
 
 Get the effective user ID and store it as [[uid]].
 
@@ -219,13 +202,10 @@ if (<<the user ID is [[NO_UID]]>> || !(<<find a user with a matching [[uid]]>>))
 puts(pw->pw_name);
 @
 
-
 \newpage
 \section{Full Listing}
 \inputc{whoami.c}
 
-
 \input{postamble.tex}
-
 
 \end{document}

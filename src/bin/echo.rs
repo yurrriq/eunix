@@ -19,6 +19,7 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
+
     let strings : Vec<_> = args.string;
 
     strings.iter().enumerate().for_each(|(i, s)| {
