@@ -162,10 +162,7 @@
               "prefix=${placeholder "out"}"
             ];
 
-            preInstall = ''
-              install -dm755 "$out/bin"
-              install -dm755 "$out/docs"
-            '';
+            installTargets = "install-c";
           };
 
           reunix = inputs.naersk.lib.${system}.buildPackage {
